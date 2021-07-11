@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Customer Registration Form</title>
+ <link rel="stylesheet" type="text/css" href="style.css">
+ <script src="Update_Data.js"></script>
+<script type="text/javascript">
+	function validate(){
+	        var Name= document.form.Name.value;
+			var EmailId = document.form.EmailId.value;
+			var Password = document.form.Password.value;
+			var ConfPass = document.form.ConfPass.value;
+		
+		
+		let email = new RegExp("^[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+.[A-Za-z0-9]$");
+		let pass = new RegExp("([A-Za-z]+[0-9]|[0-9]+[A-Za-z])[A-Za-z0-9]*");
+		if( Name == "" || Name == null ) {
+            alert( "Please enter your Name!" );
+			return false;
+         }
+		if( !email.test(EmailId)) {
+            alert( "Please provide a valid Email!" );
+            return false;
+         }
+		 if( !pass.test(Password)){
+			alert( "Password should be alphanumeric" );
+            return false;
+		 }
+		 if( Password != ConfPass ) {
+            alert( "Password don't match with confirmation password!" );
+            return false;
+         }
+	}
+</script>
+
+</head>
+<body>
+
+	<br>
+    <div class="form_bg">
+       <form name="form" action="" method="POST">
+		<h1>Registration Form</h1>
+       	<input name="Name" type="text" placeholder="Name">
+       	<input name="EmailId" type="email" placeholder="Email Id">
+
+
+        <input name="Password" type="Password" placeholder="Password">
+       	<input name="ConfPass" type="Password" placeholder="Confirm Password">
+       	<input type="button" name="submit" onclick="validate()" value="submit">
+<a href="Login.html">If you are already register?Login</a>
+        </form>
+	   </div>
+</body>
+<?php
+$Name=$_POST['Name'];
+$EmailId=$_POST['EmailId'];
+$Password=$_POST['Password'];
+
+$servername="localhost";
+$username="root";
+$password="no";
+$database="hackathon";
+
+$conn=new mysqli($servername,$username,$password,$database);
+if($conn->connect_error){
+	die('connection failed:' .$conn->connection_error);
+}
+else{
+	
+	$reg = $conn->prepare("insert into registration(Name,EmailId,Password)values(?,?,?)");
+	$reg->bind_param("sss",$Name,$EmailId,$Password);
+	$reg->execute();
+	#echo "<html><body><script>function(){window.location.replace("../index.html");}</script></body></html>";
+	#</script>
+	$reg->close();
+	$conn->close();
+}
+?>
+
+
+</html>
